@@ -1,7 +1,5 @@
 # stripe-django-assignment
 
-=======
-# stripe-django-assignment
 
 A lightweight Django demo app that demonstrates a minimal Stripe Checkout flow. This project is intended for learning, testing, and evaluation; it provides a simple storefront with three fixed products, Stripe Checkout integration, server-side verification, and a small admin-like UI to view recorded paid orders.
 
