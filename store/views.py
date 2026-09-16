@@ -78,12 +78,15 @@ def success(request):
                 stripe_session_id=session.id,
                 defaults={'amount': int(session.amount_total or 0), 'items': session.to_dict()},
             )
+            success_msg = 'Payment successful! Order recorded.'
+        else:
+            success_msg = None
         # show success page or redirect to index with message
         orders = Order.objects.order_by('-created_at')[:50]
         return render(request, 'store/index.html', {
             'products': PRODUCTS,
             'orders': orders,
-            'success_msg': 'Payment successful! Order recorded.'
+            'success_msg': success_msg,
         })
     except Exception:
         return redirect('index')

@@ -38,3 +38,16 @@ class StoreTests(TestCase):
         call_command('seed_orders')
         self.assertTrue(Order.objects.filter(stripe_session_id='demo_s_1').exists())
 
+    @patch('store.views.stripe.checkout.Session.retrieve')
+    def test_unpaid_session_does_not_show_success_message(self, mock_retrieve):
+        mock_retrieve.return_value = type('S', (), {
+            'payment_status': 'unpaid',
+            'id': 'sess_unpaid_1',
+            'amount_total': 1500,
+            'to_dict': lambda self: {},
+        })()
+        resp = self.client.get(reverse('success') + '?session_id=sess_unpaid_1')
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(Order.objects.filter(stripe_session_id='sess_unpaid_1').exists())
+        self.assertNotIn(b'Payment successful', resp.content)
+
